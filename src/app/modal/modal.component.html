@@ -1,0 +1,14 @@
+<mat-dialog-content>
+  <h2>Compras del Usuario</h2>
+  <ul>
+    <li *ngFor="let compra of data.compras">
+      {{ compra.codigo }} - {{ compra.titulo }} ({{ compra.estadoCompra }})
+      <button mat-button color="primary" (click)="cambiarEstado(compra)" class="edit-button">
+        Editar Estado
+      </button>
+    </li>
+  </ul>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="closeModal()">Cerrar</button>
+</mat-dialog-actions>

@@ -1,0 +1,108 @@
+<app-spinner *ngIf="loading$ | async"></app-spinner>
+
+<mat-toolbar color="secondary">
+  <span>Registrar Nuevo Producto</span>
+</mat-toolbar>
+
+<section fxLayoutAlign="center">
+  <mat-card>
+    <form
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      #f="ngForm"
+      (ngSubmit)="registrarProducto(f)"
+      fxLayoutGap="10px"
+    >
+      <div class="personal__photo">
+        <div class="photo">
+          <app-entity-photo
+            class="photo__img"
+            [photoURL]="photoLoaded"
+          ></app-entity-photo>
+          <button mat-button appFilesUpload (changed)="onFilesChanged($event)">
+            <mat-icon>upload</mat-icon>
+            Subir Imagen
+          </button>
+        </div>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Ingrese Nombre</mat-label>
+        <input
+          type="text"
+          ngModel
+          name="nombre"
+          required
+          placeholder="Ingrese Nombre"
+          matInput
+        />
+        <mat-error>Debe ingresar un nombre</mat-error>
+      </mat-form-field>
+
+      <!-- ... Otro código HTML anterior ... -->
+
+      <mat-form-field>
+        <mat-label>Seleccione Categoría</mat-label>
+        <mat-select [(ngModel)]="selectedCategoria" name="categoria" required>
+          <mat-option
+            *ngFor="let categoria of categorias"
+            [value]="categoria"
+            >{{ categoria.nombre }}</mat-option
+          >
+        </mat-select>
+        <mat-error>Debe seleccionar una categoría</mat-error>
+      </mat-form-field>
+
+      <!-- ... Otro código HTML posterior ... -->
+
+      <mat-form-field>
+        <mat-label>Ingrese Precio</mat-label>
+        <span matPrefix>S/ </span>
+        <input
+          type="text"
+          ngModel
+          name="precio"
+          required
+          matInput
+          (input)="($event)"
+        />
+        <mat-error>Debe ingresar un precio válido (S/ seguido de números).</mat-error>
+      </mat-form-field>
+
+
+      <mat-form-field>
+        <mat-label>Ingrese Stock</mat-label>
+        <input
+          type="number"
+          [(ngModel)]="stock"
+          name="stock"
+          required
+          placeholder="Ingrese Stock"
+          matInput
+        />
+
+        <mat-error>Debe ingresar el stock</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Negocio perteneciente</mat-label>
+        <input
+          matInput
+          [ngModel]="nombreNegocioUsuario"
+          name="negocioNombre"
+          disabled
+        />
+        <input type="hidden" [ngModel]="idNegocioUser" name="negocioId" />
+      </mat-form-field>
+
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="f.invalid"
+      >
+        Guardar Producto
+      </button>
+    </form>
+  </mat-card>
+</section>

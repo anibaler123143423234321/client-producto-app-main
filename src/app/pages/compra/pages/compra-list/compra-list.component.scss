@@ -1,0 +1,91 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  &__content {
+    min-height: 150px;
+  }
+
+  .mat-form-field {
+    margin-bottom: 20px;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Solo una columna */
+    grid-auto-rows: 1fr; /* Una fila por tarjeta */
+    gap: 20px; /* Espacio entre las tarjetas */
+    max-width: 1200px; /* Máximo ancho para centrar y limitar el contenido */
+    margin: 0 auto; /* Centrar el contenido horizontalmente */
+  }
+
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card-item {
+    padding: 3px;
+  }
+
+  .cards__item {
+    display: flex;
+    padding: 1rem;
+  }
+
+  .example-card {
+    max-width: 300px; // Ajustamos el ancho máximo de las tarjetas
+    width: 100%;
+  }
+
+  mat-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  mat-card img {
+    object-fit: cover;
+    width: 100%;
+    height: 60%;
+  }
+
+  mat-card-content {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+
+    button {
+      margin: 0 10px;
+    }
+  }
+}
+/* Estilo para el mensaje de éxito */
+.success-message {
+  display: none; /* Oculta el mensaje inicialmente */
+  background-color: green; /* Fondo verde */
+  color: white; /* Texto blanco */
+  padding: 10px; /* Espacio alrededor del mensaje */
+  border-radius: 4px; /* Bordes redondeados */
+  text-align: center; /* Texto centrado */
+  font-size: 18px; /* Tamaño de fuente */
+}
+
+/* Estilo para mostrar el mensaje cuando estadoEditadoExitoso es verdadero */
+.success-message.mostrar {
+  display: block; /* Muestra el mensaje cuando la clase 'mostrar' está presente */
+}

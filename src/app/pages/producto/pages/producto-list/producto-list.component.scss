@@ -1,0 +1,207 @@
+/* Estilos generales para toda la aplicación Angular Material */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Estilos para la cuadrícula de productos */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  gap: 20px;
+  width: 100%;
+  margin: 0 auto;
+
+  .cards__item {
+    display: flex;
+    flex: 1;
+    padding: 1rem;
+    max-width: 100%;
+
+    .example-card {
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      mat-card {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+
+
+        mat-card-header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          mat-card-title,
+          mat-card-subtitle {
+            font-size: 16px;
+          }
+        }
+
+        mat-card-content {
+          text-align: center;
+          margin-top: 10px;
+
+        }
+
+        .product-image {
+          width: 100%;
+          height: 200px; /* Altura fija para mostrar la imagen completa */
+          object-fit: contain; /* Ajusta la imagen para que se muestre completa */
+        }
+
+        .button-column {
+          display: flex;
+          justify-content: space-around;
+
+          button {
+            background-color: #007bff;
+            color: white;
+            font-size: 14px; /* Tamaño de fuente ajustado */
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px;
+
+            &:hover {
+              background-color: #0056b3;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.botonesizquierda{
+  width: 50%;
+}
+.compraractualizar{
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+.botonproducto{
+  background-color: wheat;
+  border-radius: 11px;
+  margin: 20px;
+  padding: 10px;
+  font-size: 10px;
+  width: 80%;
+}
+.botonproducto2{
+  background-color: wheat;
+  border-radius: 11px;
+  margin: 20px;
+  padding: 10px;
+  font-size: 10px;
+  width: 50%;
+}
+.stock-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.botonesstock{
+  display: flex;
+}
+.inputactualizarstock{
+  border-radius: 12px;
+  text-indent: 5px;
+  text-align: center;
+  padding: 5px;
+  font-size: 12px;
+  width: 75%;
+
+}
+/* Media queries para hacer que la cuadrícula sea responsive */
+@media screen and (max-width: 768px) {
+  .cards-container {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  }
+  .button-column {
+    flex-direction: column;
+    align-items: center;
+
+    button.mat-button {
+      padding: 5px 10px;
+      margin: 5px;
+    }
+  }
+}
+
+/* Estilos para los botones pequeños */
+.small-button {
+  font-size: 12px;
+}
+
+
+/* Estilos para el icono del carrito */
+.cart-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 24px;
+
+  .cart-item-count {
+    font-size: 16px;
+    margin-left: 5px;
+  }
+}
+
+/* Estilos para la tabla de productos agregados */
+.productos-agregados {
+  h2 {
+    font-size: 24px;
+  }
+
+  .productos-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+
+    th {
+      background-color: #007bff;
+      color: white;
+      font-size: 18px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .product-name, .product-quantity, .product-price {
+      font-size: 16px;
+    }
+
+    .total-label {
+      font-weight: bold;
+    }
+
+    .total-price {
+      font-weight: bold;
+      font-size: 18px;
+    }
+  }
+
+  .comprar-btn {
+    margin-top: 20px;
+  }
+}

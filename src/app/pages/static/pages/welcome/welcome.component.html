@@ -1,0 +1,22 @@
+<section class="flex-container">
+  <div class="row">
+    <mat-card>
+      <mat-card-title *ngIf="nombreNegocioUsuario" >Bienvenido a :
+        {{ nombreNegocioUsuario }}
+      </mat-card-title>
+
+      <mat-card-subtitle>Tu destino para compras convenientes</mat-card-subtitle>
+
+      <mat-card-content>
+        <p>
+          En este Negocio nos esforzamos por brindarte la mejor experiencia de compra. Nuestro compromiso es ofrecerte productos de calidad y un servicio excepcional.
+        </p>
+        <!-- Utiliza la primera imagen de negocios como ejemplo -->
+        <div class="image-container" *ngIf="negocios.length > 0">
+          <img class="responsive-image" [src]="negocios[0].picture" alt="Imagen del Negocio" />
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

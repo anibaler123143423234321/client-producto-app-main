@@ -1,0 +1,67 @@
+<div class="search-container">
+  <label for="searchInput">Buscar usuarios</label>
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Escribe aquí..."
+    [(ngModel)]="searchTerm"
+    (input)="updateFilteredUsers()"
+    class="search-input"
+  />
+</div>
+
+<div *ngIf="loading$ | async; else loadedContent" class="loading-message">
+  Cargando...
+</div>
+
+<div class="table-responsive">
+  <!-- Tarjeta para la tabla de usuarios -->
+  <ng-template #loadedContent>
+    <mat-card class="mat-table-card">
+      <h2>Lista de Usuarios con sus Compras Pendientes Por Revisar y Despachadas</h2>
+      <mat-table [dataSource]="filteredUsers" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.id }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="negocioId">
+          <mat-header-cell *matHeaderCellDef>Negocio</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.negocioId }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nombre">
+          <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.nombre }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="apellido">
+          <mat-header-cell *matHeaderCellDef>Apellido</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.apellido }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="telefono">
+          <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.telefono }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="email">
+          <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.email }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="role">
+          <mat-header-cell *matHeaderCellDef>Rol</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.role }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="compras">
+          <mat-header-cell *matHeaderCellDef>Compras (PRODUCTOID-NOMBREPRODUCTO-ESTADO)</mat-header-cell>
+          <mat-cell *matCellDef="let user">
+            <ng-container *ngIf="userComprasMap[user.id] && userComprasMap[user.id].length > 0">
+              <button mat-button color="primary" (click)="openModal(userComprasMap[user.id])" class="edit-button">
+                Ver Compras
+              </button>
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+    </mat-card>
+  </ng-template>
+</div>

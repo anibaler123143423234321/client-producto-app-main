@@ -1,0 +1,212 @@
+
+<app-spinner *ngIf="loading$ | async"></app-spinner>
+
+<section fxLayoutAlign="center">
+  <mat-card>
+   <form
+     fxLayout="column"
+     fxLayoutAlign="center center"
+     #f="ngForm"
+     (ngSubmit)="registrarUsuario(f)"
+     fxLayoutGap="10px"
+   >
+
+   <mat-form-field>
+    <mat-label>Click en Buscar por DNI</mat-label>
+    <input
+      type="text"
+      [readonly]="true"
+      [(ngModel)]="nombreCompleto"
+      name="nombres"
+      required
+      placeholder="Ingrese nombre "
+      matInput
+      disabled
+    />
+    <mat-error>Debe darle Click en Buscar por DNI</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Click en Buscar por DNI</mat-label>
+    <input
+      type="text"
+      [readonly]="true"
+      [(ngModel)]="apellidos"
+      name="apellidos"
+      required
+      placeholder="Ingrese apellidos"
+      matInput
+      disabled
+    />
+    <mat-error>Debe darle Click en Buscar por DNI</mat-error>
+  </mat-form-field>
+
+
+
+     <mat-form-field>
+       <mat-label>Ingrese Username</mat-label>
+       <input
+         type="text"
+         ngModel
+         name="username"
+         required
+         placeholder="vaxidrez"
+         matInput
+       />
+       <mat-error>Debe ingresar un username</mat-error>
+     </mat-form-field>
+
+     <mat-form-field>
+      <mat-label>Ingrese Telefono</mat-label>
+      <input
+        type="text"
+        ngModel
+        name="telefono"
+        required
+        pattern="[0-9]{9}"
+        maxlength="9"
+        placeholder="999999999"
+        matInput
+        (input)="dniInputChange($event)"
+      />
+      <mat-error>Debe ingresar un teléfono válido de 9 dígitos</mat-error>
+    </mat-form-field>
+
+
+
+     <mat-form-field>
+      <mat-label>Seleccione Tipo de Documento de Identidad</mat-label>
+      <mat-select ngModel name="tipoDoc" required>
+        <mat-option value="DNI">DNI</mat-option>
+        <mat-option value="Extranjero">Extranjero</mat-option>
+        <mat-option value="Pasaporte">Pasaporte</mat-option>
+      </mat-select>
+      <mat-error>Debe seleccionar su Tipo de Documento de Identidad</mat-error>
+    </mat-form-field>
+
+
+
+<mat-form-field>
+    <mat-label>Ingrese su Numero Documento de Identidad</mat-label>
+    <input
+      type="text"
+      ngModel
+      name="dni"
+      required
+      pattern="[0-9]{8}"
+      maxlength="8"
+      placeholder="99999999"
+      matInput
+
+    />
+    <mat-error>Debe ingresar su Numero Documento de Identidad con 8 números</mat-error>
+  </mat-form-field>
+
+
+ <!-- Botón para buscar DNI -->
+ <button type="button" mat-raised-button color="primary" (click)="buscarDNI(f)">Buscar DNI</button>
+
+
+    <mat-form-field>
+      <mat-label>Ingrese E-Mail</mat-label>
+      <input
+        type="email"
+        matInput
+        placeholder="prueba@gmail.com"
+        ngModel
+        name="email"
+        email
+        required
+        pattern=".*@.*"
+        #emailInput="ngModel"
+      />
+      <mat-error *ngIf="emailInput.hasError('required')">El email no puede estar en blanco</mat-error>
+      <mat-error *ngIf="emailInput.hasError('pattern')">El email debe contener '@'</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field hintLabel="El password debe tener 7 caracteres">
+      <mat-label>Ingrese Password</mat-label>
+      <input
+        type="password"
+        matInput
+        placeholder="Ingresa Password"
+        [ngModel]="f.value.password"
+        name="password"
+        required
+        minlength="7"
+      />
+      <mat-error>El password debe tener más de 7 caracteres</mat-error>
+    </mat-form-field>
+
+    <mat-form-field hintLabel="El password debe tener 7 caracteres">
+      <mat-label>Confirme Password</mat-label>
+      <input
+        type="password"
+        matInput
+        placeholder="Confirme Password"
+        [ngModel]="f.value.passwordConfirme"
+        name="passwordConfirme"
+        required
+        minlength="7"
+      />
+      <mat-error *ngIf="f.value.password !== f.value.passwordConfirme">
+        Las contraseñas no coinciden
+      </mat-error>
+    </mat-form-field>
+
+
+     <mat-form-field>
+      <mat-label>Seleccione un negocio</mat-label>
+      <mat-select [(ngModel)]="selectedNegocioId" name="negocioId" required>
+        <mat-option *ngFor="let negocio of negocios" [value]="negocio.id">
+          {{ negocio.nombre }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Debe seleccionar un negocio</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Ingrese su Departamento</mat-label>
+      <input
+        type="text"
+        ngModel
+        name="departamento"
+        required
+        placeholder="Lambayeque"
+        matInput
+      />
+      <mat-error>Debe ingresar su Departamento</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Ingrese su Distrito</mat-label>
+      <input
+        type="text"
+        ngModel
+        name="provincia"
+        required
+        placeholder="Ferreñafe"
+        matInput
+      />
+      <mat-error>Debe ingresar su Distrito</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Ingrese su Provincia</mat-label>
+      <input
+        type="text"
+        ngModel
+        name="distrito"
+        required
+        placeholder="Ferreñafe"
+        matInput
+      />
+      <mat-error>Debe ingresar su Provincia</mat-error>
+    </mat-form-field>
+
+
+     <button type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Guardar</button>
+   </form>
+    </mat-card>
+ </section>

@@ -1,0 +1,117 @@
+/* Estilos para la tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+thead {
+  background-color: #007bff;
+  color: white;
+}
+
+th,
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 12px;
+}
+
+/* Estilos para filas alternas */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Estilos para el encabezado de la tabla */
+th {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Estilos para el mensaje de carga */
+.loading-message {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 20px;
+  text-align: center;
+  color: #007bff;
+}
+
+/* Estilos para el contenedor del buscador */
+.search-container {
+  margin-bottom: 20px;
+}
+
+/* Estilos para el campo de búsqueda */
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Estilos para el botón de editar */
+.edit-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.mat-table-card {
+  padding: 20px; /* Agrega padding al contenido */
+  margin: 0 auto; /* Centra el contenedor en la página */
+  max-width: 200%;
+}
+
+
+.mat-table-container {
+  display: flex;
+  justify-content: center; /* Centra la tabla horizontalmente */
+  align-items: center; /* Centra la tabla verticalmente */
+}
+
+.mat-card {
+  padding: 16px;
+}
+
+.mat-elevation-z8 {
+  width: 100%;
+}
+
+/* Agrega estilos para la barra de desplazamiento horizontal en dispositivos móviles */
+@media (max-width: 768px) {
+  .mat-table-card {
+    max-width: 100%;
+  }
+
+  /* Otros estilos específicos para dispositivos móviles */
+  .search-input {
+    width: 100%;
+  }
+
+  /* Agrega una barra de desplazamiento horizontal */
+  .table-scroll {
+    overflow-x: auto;
+  }
+}
+.no-compras-message {
+  color: #777; /* Cambia el color según tus preferencias */
+  font-style: italic;
+}
+.hidden-row {
+  display: none;
+}
