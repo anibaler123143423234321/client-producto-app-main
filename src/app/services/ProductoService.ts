@@ -35,4 +35,15 @@ export class ProductoService {
     );
   }
 
+  verificarStock(productoId: number): Observable<boolean> {
+    const url = `${environment.url}gateway/producto/verificarStock/${productoId}`;
+
+    return this.httpClient.get<boolean>(url).pipe(
+      catchError((error) => {
+        console.error('Error al verificar el stock del producto:', error);
+        throw error;
+      })
+    );
+  }
+
 }

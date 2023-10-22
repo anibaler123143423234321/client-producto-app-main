@@ -1,6 +1,5 @@
 <mat-nav-list>
-
-  <a *ngIf="isAuthorized"  mat-list-item (click)="closeMenu()" routerLink="/">
+  <a *ngIf="isAuthorized" mat-list-item (click)="closeMenu()" routerLink="/">
     <mat-icon>home</mat-icon>
     <span class="navegacion-list-label">Home</span>
   </a>
@@ -15,67 +14,74 @@
     <span class="navegacion-list-label">Registrar</span>
   </a>
 
-  <a *ngIf="isAuthorized" mat-list-item (click)="closeMenu()" routerLink="auth/registration">
-    <mat-icon>contact_support</mat-icon>
-    <span class="navegacion-list-label">Contacto</span>
-  </a>
+  <ng-container *ngIf="isAuthorized">
+    <a mat-list-item (click)="toggleListarMenu()">
+      <mat-icon>menu</mat-icon>
+      <span class="navegacion-list-label">Listar</span>
+    </a>
+
+    <div *ngIf="listarMenuOpen">
+
+      <a *ngIf=" isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="negocio/list">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Listar Negocios</span>
+      </a>
+
+      <a *ngIf="isAdmin() || isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="categoria/list">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Listar Categorias</span>
+      </a>
+
+      <a mat-list-item (click)="closeMenu()" routerLink="producto/list">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Listado de Productos</span>
+      </a>
+
+      <a mat-list-item (click)="closeMenu()" routerLink="compra/listCompra">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Mis Compras</span>
+      </a>
+
+      <a *ngIf="isAdmin() || isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="user/list">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Ver Usuario-Compras</span>
+      </a>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isAdmin() || isSuperAdmin()">
+    <a mat-list-item (click)="toggleAgregarMenu()">
+      <mat-icon>menu</mat-icon>
+      <span class="navegacion-list-label">Agregar</span>
+    </a>
 
 
-  <a *ngIf="isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="negocio/nuevo">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Agregar Negocio</span>
-  </a>
+    <div *ngIf="agregarMenuOpen">
+      <a mat-list-item (click)="closeMenu()" routerLink="negocio/nuevo">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Agregar Negocio</span>
+      </a>
 
-  <a *ngIf="isAdmin() || isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="categoria/nuevo">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Agregar Categoria</span>
-  </a>
+      <a mat-list-item (click)="closeMenu()" routerLink="categoria/nuevo">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Agregar Categoria</span>
+      </a>
 
-  <a *ngIf="isAdmin() || isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="producto/nuevo">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Agregar Producto</span>
-  </a>
+      <a mat-list-item (click)="closeMenu()" routerLink="producto/nuevo">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Agregar Producto</span>
+      </a>
 
-   <a *ngIf="isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="negocio/list">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Listado de Negocios</span>
-  </a>
+      <a mat-list-item (click)="closeMenu()" routerLink="pago/nuevo">
+        <mat-icon>add</mat-icon>
+        <span class="navegacion-list-label">Agregar Pago</span>
+      </a>
+    </div>
 
-
-  <a *ngIf="isAdmin() || isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="categoria/list">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Listar Categorias</span>
-  </a>
-
-
-  <a *ngIf="isAuthorized" mat-list-item (click)="closeMenu()" routerLink="producto/list">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Listado de Productos</span>
-  </a>
-
-  <a *ngIf="isAuthorized" mat-list-item (click)="closeMenu()" routerLink="compra/listCompra">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Mis Compras</span>
-  </a>
-
-  <a *ngIf="isAdmin() || isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="pago/nuevo">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Mis Pagos</span>
-  </a>
-
-  <a *ngIf="isAdmin() || isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="user/list">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Ver Usuario-Compras</span>
-  </a>
-
-  <a *ngIf="isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="user/rol">
-    <mat-icon>add</mat-icon>
-    <span class="navegacion-list-label">Dar Rol</span>
-  </a>
+  </ng-container>
 
   <a *ngIf="isAuthorized" mat-list-item (click)="onSignOut()" (click)="closeMenu()">
     <mat-icon>logout</mat-icon>
     <span class="navegacion-list-label">Salir Sesion</span>
   </a>
-
 </mat-nav-list>

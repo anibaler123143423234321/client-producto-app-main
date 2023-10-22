@@ -1,5 +1,5 @@
 <div class="search-container">
-  <label for="searchInput">Buscar usuarios</label>
+  <label class="searsh-label" for="searchInput">Buscar usuarios</label>
   <input
     type="text"
     id="searchInput"
@@ -20,36 +20,36 @@
     <mat-card class="mat-table-card">
       <h2>Lista de Usuarios con sus Compras Pendientes Por Revisar y Despachadas</h2>
       <mat-table [dataSource]="filteredUsers" class="mat-elevation-z8">
-        <ng-container matColumnDef="id">
+        <ng-container matColumnDef="id" class="ng-container">
           <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
-          <mat-cell *matCellDef="let user">{{ user.id }}</mat-cell>
+          <mat-cell *matCellDef="let user" class="table-fill">{{ user.id }}</mat-cell>
         </ng-container>
-        <ng-container matColumnDef="negocioId">
+        <ng-container matColumnDef="negocioId" class="ng-container">
           <mat-header-cell *matHeaderCellDef>Negocio</mat-header-cell>
-          <mat-cell *matCellDef="let user">{{ user.negocioId }}</mat-cell>
+          <mat-cell *matCellDef="let user" class="table-fill">{{ user.negocioId }}</mat-cell>
         </ng-container>
-        <ng-container matColumnDef="nombre">
+        <ng-container matColumnDef="nombre" class="ng-container">
           <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
-          <mat-cell *matCellDef="let user">{{ user.nombre }}</mat-cell>
+          <mat-cell *matCellDef="let user" class="table-fill">{{ user.nombre }}</mat-cell>
         </ng-container>
-        <ng-container matColumnDef="apellido">
+        <ng-container matColumnDef="apellido" class="ng-container">
           <mat-header-cell *matHeaderCellDef>Apellido</mat-header-cell>
-          <mat-cell *matCellDef="let user">{{ user.apellido }}</mat-cell>
+          <mat-cell *matCellDef="let user" class="table-fill">{{ user.apellido }}</mat-cell>
         </ng-container>
-        <ng-container matColumnDef="telefono">
+        <ng-container matColumnDef="telefono" class="ng-container">
           <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
-          <mat-cell *matCellDef="let user">{{ user.telefono }}</mat-cell>
+          <mat-cell *matCellDef="let user" class="table-fill">{{ user.telefono }}</mat-cell>
         </ng-container>
-        <ng-container matColumnDef="email">
+        <ng-container matColumnDef="email" class="ng-container">
           <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
-          <mat-cell *matCellDef="let user">{{ user.email }}</mat-cell>
+          <mat-cell *matCellDef="let user" class="table-fill">{{ user.email }}</mat-cell>
         </ng-container>
-        <ng-container matColumnDef="role">
+        <ng-container matColumnDef="role" class="ng-container">
           <mat-header-cell *matHeaderCellDef>Rol</mat-header-cell>
-          <mat-cell *matCellDef="let user">{{ user.role }}</mat-cell>
+          <mat-cell *matCellDef="let user" class="table-fill">{{ user.role }}</mat-cell>
         </ng-container>
-        <ng-container matColumnDef="compras">
-          <mat-header-cell *matHeaderCellDef>Compras (PRODUCTOID-NOMBREPRODUCTO-ESTADO)</mat-header-cell>
+        <ng-container matColumnDef="compras" class="ng-container">
+          <mat-header-cell *matHeaderCellDef >Compras </mat-header-cell>
           <mat-cell *matCellDef="let user">
             <ng-container *ngIf="userComprasMap[user.id] && userComprasMap[user.id].length > 0">
               <button mat-button color="primary" (click)="openModal(userComprasMap[user.id])" class="edit-button">

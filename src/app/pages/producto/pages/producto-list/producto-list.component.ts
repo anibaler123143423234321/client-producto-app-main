@@ -234,6 +234,9 @@ export class ProductoListComponent implements OnInit {
             this.stockActualizado = true;
           }
 
+          // Establece el mensaje de confirmación solo cuando se hace clic en "Añadir al Carrito"
+          this.productoAgregadoMensaje = `Has agregado "${nombreProducto}" al carrito.`;
+
           const productoEnCarrito = this.arrayCompra.find(
             (c) => c.productoId === IDProducto
           );
@@ -442,5 +445,7 @@ onSearchTermChange(): void {
     }
   }, 1000); // 1000 milisegundos = 1 segundo
 }
+
+
 
 }

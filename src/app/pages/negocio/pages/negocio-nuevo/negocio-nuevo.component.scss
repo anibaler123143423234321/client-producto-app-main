@@ -7,10 +7,23 @@
   margin-top: 20px;
 }
 
-.mat-form-field {
-  width: 400px;
+section{
+  padding:15px;
 }
+mat-card{
+  width: 100%;
+}
+form{
+  width: 100%;
+  padding: 15px;
 
+}
+mat-toolbar {
+  background-color: white;
+}
+mat-form-field{
+  width: 100%;
+}
 .personal {
   &__photo {
     display: flex;
@@ -47,8 +60,28 @@
 }
 
 /* Ajusta el margen superior del elemento de texto */
-.photo2 button {
-  margin-top: 10px; /* Puedes ajustar el valor según tus necesidades */
+
+
+.subir-fotos{
+  display: flex;
+  gap: 25px;
+  justify-content: space-around;
+  width: 50%;
 }
 
-
+.photo button{
+  width: 100%;
+  background: black;
+  border-radius: 12px;
+  color: white;
+  gap: 10px;
+  font-size: 10px;
+}
+.photo2 button{
+  width: 100%;
+  background: black;
+  border-radius: 12px;
+  color: white;
+  gap: 10px;
+  font-size: 10px;
+}

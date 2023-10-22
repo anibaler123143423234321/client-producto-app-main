@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { Observable, of, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '@app/store';
 import * as fromList from '../../store/save';
 import { select } from '@ngrx/store';
+import { RucReponse } from './rucResponse';
+import Swal from 'sweetalert2';
+import { HttpClient } from '@angular/common/http';
+
+
 
 @Component({
   selector: 'app-negocio-nuevo',
@@ -17,7 +22,11 @@ export class NegocioNuevoComponent {
   photoLoaded!: string;
   photoLoadedQr!: string;
 
-  constructor(private store: Store<fromRoot.State>) {}
+  razonSocial: string='';
+
+
+  constructor(private store: Store<fromRoot.State>,
+    public http: HttpClient,) {}
 
   registrarNegocio(form: NgForm): void {
     if (form.valid && this.photoLoaded && this.photoLoadedQr) {
@@ -51,4 +60,7 @@ export class NegocioNuevoComponent {
       }
     }
   }
+
+
+
 }

@@ -116,6 +116,9 @@
   width: 75%;
 
 }
+.container{
+  margin: 20px;
+}
 /* Media queries para hacer que la cuadrícula sea responsive */
 @media screen and (max-width: 768px) {
   .cards-container {

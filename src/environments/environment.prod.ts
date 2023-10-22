@@ -12,5 +12,5 @@ export const environment = {
       measurementId: "G-Z3BPHDP2NK"
     }
   },
-  url:'https://eureka-back-ea6beef74bbc.herokuapp.com/'
+  url:'https://dotval-app-982770f3e239.herokuapp.com/'
 };

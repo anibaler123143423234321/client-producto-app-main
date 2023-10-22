@@ -1,8 +1,6 @@
 <app-spinner *ngIf="loading$ | async"></app-spinner>
 
-<mat-toolbar color="secondary">
-  <span>Registrar Nuevo Negocio</span>
-</mat-toolbar>
+
 
 <section fxLayoutAlign="center">
   <mat-card>
@@ -13,19 +11,23 @@
       (ngSubmit)="registrarNegocio(f)"
       fxLayoutGap="10px"
     >
-
+    <mat-toolbar color="secondary">
+      <span>Registrar Nuevo Negocio</span>
+    </mat-toolbar>
       <mat-form-field>
         <mat-label>Nombre del Negocio</mat-label>
         <input
-          type="text"
-          ngModel
-          name="nombre"
-          required
-          placeholder="Ingrese Nombre del Negocio"
-          matInput
-        />
+        type="text"
+        ngModel
+        name="nombre"
+        required
+        placeholder="Ingrese Nombre del Negocio"
+        matInput
+      />
         <mat-error>Debe ingresar un nombre para el negocio</mat-error>
       </mat-form-field>
+
+
 
       <mat-form-field>
         <mat-label>Dirección</mat-label>
@@ -47,6 +49,8 @@
           ngModel
           name="ruc"
           required
+          pattern="[0-12]{11}"
+          maxlength="11"
           placeholder="Ingrese el RUC del Negocio"
           matInput
         />
@@ -74,6 +78,8 @@
           ngModel
           name="telefono"
           required
+          pattern="[0-10]{9}"
+          maxlength="9"
           placeholder="980369856"
           matInput
         />
@@ -82,27 +88,27 @@
 
 
  <!-- Otros campos de formulario -->
-
+<div class="subir-fotos">
  <div class="personal__photo">
   <div class="photo">
     <app-entity-photo class="photo__img" [photoURL]="photoLoaded"></app-entity-photo>
     <button mat-button appFilesUpload (changed)="onFilesChanged($event, false)">
-      <mat-icon>upload</mat-icon>
-      Subir Imagen de su Negocio
+      <mat-icon >upload</mat-icon>
+      <span>Subir Imagen </span>
     </button>
   </div>
 </div>
 
 <div class="personal__photo">
   <div class="photo2">
-    <app-entity-photo class="photo__img2" [photoURL]="photoLoadedQr"></app-entity-photo>
+    <app-entity-photo class="photo__img" [photoURL]="photoLoadedQr"></app-entity-photo>
     <button mat-button appFilesUpload (changed)="onFilesChanged($event, true)">
       <mat-icon>upload</mat-icon>
-      Subir Imagen de su Qr del Negocio
+      Subir Imagen de su QR
     </button>
   </div>
 </div>
-
+</div>
       <button
       type="submit"
       mat-raised-button

@@ -1,5 +1,5 @@
 export interface DniResponse {
-  success: boolean;
+    success: boolean;
     dni: string;
     nombres: string;
     apellidoPaterno: string;

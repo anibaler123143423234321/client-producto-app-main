@@ -13,6 +13,9 @@ export class MenuListComponent implements OnInit {
   @Input() isAuthorized !: boolean | null;
   @Input() user: User | null = null;
   @Output() signOut = new EventEmitter<void>();
+// Agrega estas variables para controlar los desplegables
+listarMenuOpen: boolean = true; // Establece a `true` para que esté desplegado por defecto
+agregarMenuOpen: boolean = true; // Establece a `true` para que esté desplegado por defecto
 
   constructor(private carritoService: CarritoService) {}
 
@@ -49,5 +52,14 @@ export class MenuListComponent implements OnInit {
     return this.user?.role === 'SUPERADMIN';
   }
 
+
+  // Métodos para controlar la apertura y cierre de los desplegables
+  toggleListarMenu(): void {
+    this.listarMenuOpen = !this.listarMenuOpen;
+  }
+
+  toggleAgregarMenu(): void {
+    this.agregarMenuOpen = !this.agregarMenuOpen;
+  }
 
 }

@@ -104,23 +104,28 @@ tipoDePago: string | undefined;
       console.warn('Ya estás suscrito a productos$, evitando suscripción duplicada.');
     }
 
-// Continúa con el resto del código para realizar la compra
-this.arrayCompra.forEach((compra) => {
-  // Agrega tipoEnvio y tipoDePago a cada compra
-  compra.tipoEnvio = this.tipoEnvio;
-  compra.tipoDePago = this.tipoDePago;
-
-  this.store.dispatch(new fromActions.Create(compra));
-});
+    this.arrayCompra.forEach((compra) => {
+      this.productoService.obtenerProducto(compra.productoId).subscribe((producto) => {
+        if (producto.stock > 0) {
+          // Si el stock es mayor que cero, procede con la compra
+          compra.tipoEnvio = this.tipoEnvio;
+          compra.tipoDePago = this.tipoDePago;
+          this.store.dispatch(new fromActions.Create(compra));
+        } else {
+          console.error('No hay suficiente stock para el producto con ID: ', compra.productoId);
+          // Puedes mostrar un mensaje al usuario o realizar otra acción en este caso.
+        }
+      });
+    });
 
     // Limpia el carrito después de realizar la compra
-  this.arrayCompra = [];
-  this.CarritoService.clearCart(); // Agrega esta línea
+    this.arrayCompra = [];
+    this.CarritoService.clearCart();
 
-  this.compraRealizada = true;
+    this.compraRealizada = true;
 
-  setTimeout(() => {
-    this.compraRealizada = false;
-  }, 3000);
-}
+    setTimeout(() => {
+      this.compraRealizada = false;
+    }, 3000);
+  }
 }

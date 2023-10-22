@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { DniResponse } from './dniResponse';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { timer } from 'rxjs';
 
 const apiUrl = 'https://dniruc.apisperu.com/api/v1/dni/';
 const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtpa2UuamVwZkBnbWFpbC5jb20ifQ.NRMVtJiFKRXYBXuJPLwNsKeRK5hPWIALRxbqNSWloXU';
@@ -30,7 +31,7 @@ export class RegistrationComponent implements OnInit {
   nombreCompleto: string = ''; // Nueva variable para el nombre completo
   apellidos: string = ''; // Nueva variable para los apellidos
   dniNumero: string = '';
-dialogRef: MatDialogRef<any> | undefined;
+  dialogRef: MatDialogRef<any> | undefined;
 
 
   constructor(
@@ -137,7 +138,11 @@ registrarUsuario(form: NgForm) {
                 title: 'Busqueda Exitosa',
                 text: 'Los campos de nombres y apellidos están llenos.',
                 icon: 'success',
-                confirmButtonText: 'OK'
+              });
+
+              // Cierra el SweetAlert2 automáticamente después de 2 segundos (o el tiempo que desees)
+              timer(1000).subscribe(() => {
+                Swal.close();
               });
             }
           } else {
