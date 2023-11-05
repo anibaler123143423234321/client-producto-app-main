@@ -14,6 +14,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CompraService } from '@app/services/CompraService';
 import { NegocioService } from '@app/services/NegocioService';
 import * as fromUser from '@app/store/user';
+import jsPDF from 'jspdf';
+import Swal from 'sweetalert2';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-compra-list',
@@ -36,7 +39,6 @@ export class CompraListComponent implements OnInit {
   apellidoUsuario: string;
   idNegocioUser: string | undefined;
 
-
   currentPage = 1;
   itemsPerPage = 15;
   boletaUrl!: SafeUrl;
@@ -49,7 +51,9 @@ export class CompraListComponent implements OnInit {
     public generalService: GeneralService,
     private router: Router,
     public negocioService: NegocioService,
-    public compraService: CompraService
+    public compraService: CompraService,
+    private cd: ChangeDetectorRef
+
   ) {
     this.comprasLength = 0;
     this.nombreUsuario = '';
@@ -67,8 +71,12 @@ export class CompraListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.user$ = this.store.pipe(select(fromUser.getUser)) as Observable<fromUser.UserResponse>;
-    this.isAuthorized$ = this.store.pipe(select(fromUser.getIsAuthorized)) as Observable<boolean>;
+    this.user$ = this.store.pipe(
+      select(fromUser.getUser)
+    ) as Observable<fromUser.UserResponse>;
+    this.isAuthorized$ = this.store.pipe(
+      select(fromUser.getIsAuthorized)
+    ) as Observable<boolean>;
 
     this.store.dispatch(new fromList.Read());
     this.loading$ = this.store.pipe(select(fromList.getLoading));
@@ -80,21 +88,21 @@ export class CompraListComponent implements OnInit {
       }
     });
 
-
     this.nombreUsuario = this.generalService.usuario$?.nombre || '';
     this.apellidoUsuario = this.generalService.usuario$?.apellido || '';
     this.idUser = this.generalService.usuario$?.id;
     this.idNegocioUser = this.generalService.usuario$?.negocioId || '';
 
-  // Obtener la información de negocio.picture
-  if (this.idNegocioUser) {
-    this.negocioService.getNegocioById(Number(this.idNegocioUser)).subscribe((negocio) => {
-      if (negocio && negocio.picture) {
-        this.negocioPicture = negocio.picture;
-      }
-    });
-  }
-
+    // Obtener la información de negocio.picture
+    if (this.idNegocioUser) {
+      this.negocioService
+        .getNegocioById(Number(this.idNegocioUser))
+        .subscribe((negocio) => {
+          if (negocio && negocio.picture) {
+            this.negocioPicture = negocio.picture;
+          }
+        });
+    }
   }
 
   navigateToProductoNuevo(): void {
@@ -106,107 +114,239 @@ export class CompraListComponent implements OnInit {
   }
 
   generarPDF(compraGroups: CompraResponse[][]): void {
-    const pdfMake: any = require('pdfmake/build/pdfmake');
-    const pdfFonts: any = require('pdfmake/build/vfs_fonts');
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
     compraGroups.forEach((compras, index) => {
-      compras.forEach((compra) => {
-        if (compra.fechaCompra) {
-          compra.fechaCompra = this.calcularFechaDiferencia(compra.fechaCompra).toLocaleString();
+      // Verificar si todas las compras tienen el estado "Pago Completado"
+      const todasComprasPagadas = compras.every(
+        (compra) => compra.estadoCompra === 'Pago Completado'
+      );
+
+      if (todasComprasPagadas) {
+        const doc = new jsPDF({
+          orientation: 'landscape',
+          unit: 'mm',
+          format: [80, 100],
+        });
+
+        compras.forEach((compra) => {
+          if (compra.fechaCompra) {
+            const fecha = this.calcularFechaDiferencia(compra.fechaCompra);
+            compra.fechaCompra = fecha ? fecha.toLocaleString() : 'Fecha no proporcionada';
+          } else {
+            compra.fechaCompra = 'Fecha no proporcionada';
+          }
+        });
+
+        const usuario = `${this.nombreUsuario} ${this.apellidoUsuario}`;
+        const primeraCompra = compras[0];
+        const fechaCompra = compras.length > 0 ? compras[0].fechaCompra : null;
+        const idsCompra = compras
+          .map((compra) => compra.codigo?.toString())
+          .join(', ');
+        const idsProducto = compras
+          .map((compra) => compra.productoId.toString())
+          .join(', ');
+        const nombresProductos = compras
+          .map((compra) => compra.titulo.toString())
+          .join(', ');
+        const precioTotal = this.getTotalPrecio(compras);
+        const precioCompra = compras.map((compra) => compra.precioCompra);
+        const cantidad = compras.map((compra) => compra.cantidad);
+        // Obtén el DNI del usuario
+        const dniUsuario =
+          this.generalService.usuario$?.dni || 'DNI no proporcionado';
+
+        // Verifica si hay un negocio asociado al usuario y obtén sus detalles
+        let negocioNombre = '';
+        let negocioDireccion = '';
+        let negocioRUC = '';
+        if (this.idNegocioUser) {
+          this.negocioService
+            .getNegocioById(Number(this.idNegocioUser))
+            .subscribe((negocio) => {
+              if (negocio) {
+                negocioNombre = negocio.nombre || 'Sin nombre';
+                negocioDireccion = negocio.direccion || 'Sin dirección';
+                negocioRUC = negocio.ruc || 'Sin RUC';
+
+                // Ajustar las posiciones de texto
+                doc.setFontSize(8);
+                doc.setFont('normal');
+                // Centrar el nombre del negocio
+                const nombreWidth =
+                  (doc.getStringUnitWidth(negocioNombre) * 3) /
+                  doc.internal.scaleFactor; // 8 es el tamaño de fuente
+                const nombreX = (80 - nombreWidth) / 2;
+                doc.text(negocioNombre, nombreX, 4); // Reducir la coordenada Y
+
+                doc.setFontSize(6);
+                // Centrar la dirección
+                const direccionWidth =
+                  (doc.getStringUnitWidth(negocioDireccion) * 3) /
+                  doc.internal.scaleFactor; // 6 es el tamaño de fuente
+                const direccionX = (80 - direccionWidth) / 2;
+                doc.text(negocioDireccion, direccionX, 7);
+                // Centrar el RUC
+                const rucWidth =
+                  (doc.getStringUnitWidth(negocioRUC) * 3) /
+                  doc.internal.scaleFactor; // 6 es el tamaño de fuente
+                const rucX = (80 - rucWidth) / 2;
+                doc.text(`RUC: ${negocioRUC}`, rucX, 10); // Ajustar la coordenada Y
+                doc.line(5, 11, 85, 11);
+                doc.setFontSize(6);
+                doc.text('NOTA DE VENTA', 36, 13); // Ajustar la coordenada Y
+                doc.text(`CODIGOS DE COMPRAS: ${idsCompra}`, 5, 16); // Ajustar la coordenada Y
+                doc.line(5, 17, 85, 17);
+                doc.setFontSize(6);
+                doc.text(`CLIENTE: ${usuario}`, 5, 19); // Ajustar la coordenada Y
+                doc.text(`DNI / RUC: ${dniUsuario}`, 5, 22); // Ajustar la coordenada Y
+                doc.text(`FECHA DE EMISIÓN: ${fechaCompra}`, 5, 25); // Ajustar la coordenada Y
+                doc.line(5, 26, 85, 26);
+
+                doc.setFontSize(6);
+
+                // Textos arriba
+
+                doc.text('CONCEPTO', 5, 28); // Ajustar la coordenada Y
+                doc.text('CANTIDAD', 36, 28); // Ajustar la coordenada Y
+                doc.text('PRECIO TOTAL', 70, 28); // Ajustar la coordenada Y
+
+                doc.line(5, 29, 85, 29);
+                // Datos abajo en columnas
+                const dataStartY = 31; // Coordenada Y inicial para los datos
+                const lineHeight = 2; // Altura de cada línea
+                compras.forEach((compra, i) => {
+                  const posY = dataStartY + i * lineHeight;
+                  doc.text(compra.titulo, 5, posY);
+                  doc.text(compra.cantidad.toString(), 40, posY); // Agrega la cantidad
+                  doc.text(`S/${compra.precioCompra.toFixed(2)}`, 70, posY); // Agrega el precio de cada producto
+                });
+                doc.line(5, 74, 85, 74);
+                doc.line(5, 77, 85, 77);
+
+                const precioTotalNumber = parseFloat(precioTotal);
+                doc.text(
+                  `IMPORTE TOTAL: S/${precioTotalNumber.toFixed(2)}`,
+                  5,
+                  73
+                );
+                doc.text('GRACIAS POR SU COMPRA, LO ESPERAMOS PRONTO', 5, 76); // Ajustar la coordenada Y
+                doc.text('Generado desde Software Dotval', 5, 79); // Ajustar la coordenada Y
+
+                // Muestra el cuadro de diálogo cuando la llamada asincrónica se complete
+                Swal.fire({
+                  icon: 'success',
+                  title: 'PDF generado',
+                  text: 'El PDF se ha generado exitosamente.',
+                  timer: 3000, // Cierra automáticamente después de 3 segundos (ajusta el tiempo según tus preferencias)
+                  showConfirmButton: false, // Oculta el botón "OK"
+                });
+
+                // Programa el cierre del cuadro de diálogo después de un tiempo
+                setTimeout(() => {
+                  Swal.close();
+                  this.cd.detectChanges();
+                }, 3000); // Cierra automáticamente después de 3 segundos (ajusta el tiempo según tus preferencias)
+
+                // Guardar el PDF
+                doc.save(`boleta_${idsProducto}_${usuario}_${index}.pdf`);
+              }
+            });
         } else {
-          compra.fechaCompra = "Fecha no proporcionada"; // Otra acción en caso de fecha no proporcionada
+          // Si no hay negocio asociado, crea el PDF sin los detalles del negocio
+          doc.setFontSize(8);
+          doc.setFont('normal');
+          doc.text('Nota de Venta', 10, 12); // Ajustar la coordenada Y
+          doc.text('Información de las Compras:', 5, 18); // Ajustar la coordenada Y
+
+          // Agregar las líneas debajo de nota de venta
+          doc.line(5, 30, 75, 30);
+          doc.line(5, 31, 75, 31);
+          doc.line(5, 32, 75, 32);
+
+          doc.setFontSize(6);
+          doc.text(`Nombre del Usuario: ${usuario}`, 5, 24); // Ajustar la coordenada Y
+          doc.text(`DNI del Usuario: ${dniUsuario}`, 5, 30); // Ajustar la coordenada Y
+          doc.text(`Fecha de Emisión: ${fechaCompra}`, 5, 36); // Ajustar la coordenada Y
+          doc.text(`Codigos de las Compra: ${idsCompra}`, 5, 42); // Ajustar la coordenada Y
+          doc.text(`Codigos de los Productos: ${idsProducto}`, 5, 48); // Ajustar la coordenada Y
+          doc.text(`Nombre del Producto: ${nombresProductos}`, 5, 54); // Ajustar la coordenada Y
+          doc.text(
+            `Precio Total de los Productos a pagar: $${precioTotal}`,
+            5,
+            60
+          ); // Ajustar la coordenada Y
+
+          doc.save(`boleta_${idsProducto}_${usuario}_${index}.pdf`);
+
+          // Muestra el cuadro de diálogo
+          Swal.fire({
+            icon: 'success',
+            title: 'PDF generado',
+            text: 'El PDF se ha generado exitosamente.',
+          });
         }
-      });
+      } else {
+        // Muestra un cuadro de diálogo de error cuando no todas las compras están pagadas
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No todas las compras están pagadas',
+        });
+      }
 
-      const usuario = `${this.nombreUsuario} ${this.apellidoUsuario}`;
-      const primeraCompra = compras[0];
-      const fechaCompra = compras.map((compra) => compra.fechaCompra);
-      const idsCompra = compras.map((compra) => compra.codigo?.toString()).join(', ');
-      const idsProducto = compras.map((compra) => compra.productoId.toString()).join(', ');
-      const nombresProductos = compras.map((compra) =>
-        `${compra.titulo} (${compra.cantidad} cant) $${compra.precioCompra.toFixed(2)}`
-      ).join(', ');
-      const precioTotal = this.getTotalPrecio(compras);
-
-      const docDefinition = {
-        content: [
-          { text: 'Boleta de Compra', style: 'header' },
-          { text: 'Información de las Compras:', style: 'info' },
-          { text: `Nombre del Usuario: ${usuario}`, style: 'info' },
-          { text: `Fecha de Compra: ${fechaCompra}`, style: 'info' },
-          { text: `Codigos de las Compra: ${idsCompra}`, style: 'info' },
-          { text: `Codigos de los Productos: ${idsProducto}`, style: 'info' },
-          { text: `Nombre del Producto: ${nombresProductos}`, style: 'info' },
-          { text: `Precio Total de los Productos a pagar: $${precioTotal}`, style: 'info' },
-          { text: '', margin: [0, 10, 0, 0] },
-        ],
-        styles: {
-          header: {
-            fontSize: 12,
-            bold: true,
-            margin: [0, 5, 0, 5],
-          },
-          info: {
-            fontSize: 10,
-            margin: [0, 5, 0, 5],
-          },
-        },
-      };
-
-      pdfMake.createPdf(docDefinition).download(`boleta_${usuario}_${index}.pdf`);
     });
   }
 
+  // Actualiza esta función para agrupar solo por minuto
+  groupComprasByFecha(compras: CompraResponse[]): {
+    [key: string]: CompraResponse[];
+  } {
+    const groupedCompras: { [key: string]: CompraResponse[] } = {};
 
+    compras.forEach((compra) => {
+      const fechaCompraKey = new Date(compra.fechaCompra).toLocaleString(
+        undefined,
+        {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+        }
+      ); // Usar la fecha con hora y minutos
+      if (!groupedCompras[fechaCompraKey]) {
+        groupedCompras[fechaCompraKey] = [];
+      }
+      groupedCompras[fechaCompraKey].push(compra);
+    });
 
-// Actualiza esta función para agrupar solo por minuto
-groupComprasByFecha(compras: CompraResponse[]): { [key: string]: CompraResponse[] } {
-  const groupedCompras: { [key: string]: CompraResponse[] } = {};
-
-  compras.forEach((compra) => {
-    const fechaCompraKey = new Date(compra.fechaCompra).toLocaleString(undefined, {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-    }); // Usar la fecha con hora y minutos
-    if (!groupedCompras[fechaCompraKey]) {
-      groupedCompras[fechaCompraKey] = [];
-    }
-    groupedCompras[fechaCompraKey].push(compra);
-  });
-
-  return groupedCompras;
-}
-
-
-
-getTotalPrecio(compras: CompraResponse[]): string {
-  const total = compras.reduce((sum, compra) => sum + compra.precioCompra, 0);
-  return total.toFixed(2);
-}
-
-
-objectKeys(obj: any): string[] {
-  return Object.keys(obj);
-}
-
-getTotalCantidad(compras: CompraResponse[]): number {
-  const totalCantidad = compras.reduce((sum, compra) => sum + compra.cantidad, 0);
-  return totalCantidad;
-}
-
-
-calcularFechaDiferencia(fechaCompraStr: string): Date {
-  const fechaCompra = new Date(fechaCompraStr);
-  if (isNaN(fechaCompra.getTime())) {
-    // Si la fecha no es válida, puedes manejarla como desees, por ejemplo, retornar una fecha predeterminada o mostrar un mensaje de error.
-    return new Date(); // Retorna una fecha predeterminada
+    return groupedCompras;
   }
-  fechaCompra.setHours(fechaCompra.getHours() - 5); // Restar 5 horas
-  return fechaCompra;
-}
+
+  getTotalPrecio(compras: CompraResponse[]): string {
+    const total = compras.reduce((sum, compra) => sum + compra.precioCompra, 0);
+    return total.toFixed(2);
+  }
+
+  objectKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+
+  getTotalCantidad(compras: CompraResponse[]): number {
+    const totalCantidad = compras.reduce(
+      (sum, compra) => sum + compra.cantidad,
+      0
+    );
+    return totalCantidad;
+  }
+
+  calcularFechaDiferencia(fechaCompraStr: string): Date | null {
+    const fechaCompra = new Date(fechaCompraStr);
+    if (isNaN(fechaCompra.getTime())) {
+      return null;
+    }
+    fechaCompra.setHours(fechaCompra.getHours() - 5); // Restar 5 horas
+    return fechaCompra;
+  }
 
 }

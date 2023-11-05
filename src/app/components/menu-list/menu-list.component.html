@@ -57,7 +57,7 @@
 
 
     <div *ngIf="agregarMenuOpen">
-      <a mat-list-item (click)="closeMenu()" routerLink="negocio/nuevo">
+      <a *ngIf="isSuperAdmin()" mat-list-item (click)="closeMenu()" routerLink="negocio/nuevo">
         <mat-icon>add</mat-icon>
         <span class="navegacion-list-label">Agregar Negocio</span>
       </a>
@@ -74,7 +74,7 @@
 
       <a mat-list-item (click)="closeMenu()" routerLink="pago/nuevo">
         <mat-icon>add</mat-icon>
-        <span class="navegacion-list-label">Agregar Pago</span>
+        <span class="navegacion-list-label">Politicas Privacidad</span>
       </a>
     </div>
 

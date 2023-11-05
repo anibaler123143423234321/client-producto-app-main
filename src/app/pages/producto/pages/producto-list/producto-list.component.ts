@@ -216,6 +216,7 @@ export class ProductoListComponent implements OnInit {
   }
 
   addCarrito(IDProducto: number, precioProducto: any, nombreProducto: any) {
+
     const estadoCompra = 'Pendiente Por Revisar';
 
     this.productos$
@@ -445,7 +446,6 @@ onSearchTermChange(): void {
     }
   }, 1000); // 1000 milisegundos = 1 segundo
 }
-
 
 
 }

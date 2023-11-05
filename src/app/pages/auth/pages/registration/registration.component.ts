@@ -11,10 +11,10 @@ import { DniResponse } from './dniResponse';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { timer } from 'rxjs';
+import { environmentProdToken } from 'environments/environment.prodToken';
 
-const apiUrl = 'https://dniruc.apisperu.com/api/v1/dni/';
-const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtpa2UuamVwZkBnbWFpbC5jb20ifQ.NRMVtJiFKRXYBXuJPLwNsKeRK5hPWIALRxbqNSWloXU';
-
+const apiUrl = environmentProdToken.apiUrl;
+const token = environmentProdToken.authToken;
 
 @Component({
   selector: 'app-registration',
@@ -165,6 +165,19 @@ registrarUsuario(form: NgForm) {
       }
     );
   }
+
+  // En tu archivo de componente
+togglePasswordVisibility() {
+  const passwordInput = document.getElementById('password-input') as HTMLInputElement;
+  if (passwordInput) {
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text'; // Muestra la contraseña en texto sin formato
+    } else {
+      passwordInput.type = 'password'; // Oculta la contraseña (el valor predeterminado)
+    }
+  }
+}
+
 
   }
 

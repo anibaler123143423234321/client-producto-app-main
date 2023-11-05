@@ -7,6 +7,7 @@ import * as fromActions from '../../store/save'; // Importa la acción Create
 import { CarritoService } from '@app/services/CarritoService';
 import { ProductoService } from '@app/services/ProductoService'; // Importa el servicio de productos
 import { CompraCreateRequest } from '../../store/save'; // Asegúrate de importar correctamente el modelo CompraCreateRequest
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-compra-nuevo',
@@ -73,59 +74,89 @@ export class CompraNuevoComponent implements OnInit {
   realizarCompra() {
     const estadoCompra = 'Pendiente Por Revisar';
 
-    // Verifica si algún campo obligatorio está vacío
-  if (!this.nombreProducto || !this.tipoEnvio || !this.tipoDePago || this.cantidad <= 0) {
-    console.log('Todos los campos deben llenarse correctamente para realizar la compra');
-    return; // Evita realizar la compra si algún campo está incompleto
-  }
+    if (!this.nombreProducto || !this.tipoEnvio || !this.tipoDePago || this.cantidad <= 0) {
+      console.log('Todos los campos deben llenarse correctamente para realizar la compra');
+      return;
+    }
 
     if (this.cantidad <= 0) {
       console.log('La cantidad debe ser mayor que cero para realizar la compra');
-      return; // Evita realizar la compra si la cantidad no es válida
+      return;
     }
 
     if (this.cantidad > this.stockDisponible) {
-      console.log('La cantidad supera el stock disponible');
-      return; // Evita realizar la compra si la cantidad supera el stock disponible
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La cantidad seleccionada supera el stock disponible. Verifica la cantidad de stock disponible antes de comprar.'
+      });
+      return;
     }
 
-    // Crea un objeto CompraCreateRequest
-    const compra: CompraCreateRequest = {
-      titulo: this.nombreProducto,
-      cantidad: this.cantidad,
-      productoId: this.productoId,
-      userId: this.userId,
-      precioCompra: this.precio,
-      estadoCompra: estadoCompra,
-      tipoEnvio: this.tipoEnvio,
-      tipoDePago: this.tipoDePago
-    };
+    this.productoService.obtenerProducto(this.productoId).subscribe(
+      (producto) => {
+        if (this.cantidad > producto.stock) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'La cantidad seleccionada supera el stock disponible. Verifica la cantidad de stock disponible antes de comprar.'
+          });
+        } else {
+          const compra: CompraCreateRequest = {
+            titulo: this.nombreProducto,
+            cantidad: this.cantidad,
+            productoId: this.productoId,
+            userId: this.userId,
+            precioCompra: this.precio,
+            estadoCompra: estadoCompra,
+            tipoEnvio: this.tipoEnvio,
+            tipoDePago: this.tipoDePago,
+          };
 
-    // Llama al servicio para guardar la compra en el backend
-    this.store.dispatch(new fromActions.Create(compra));
+          this.store.dispatch(new fromActions.Create(compra));
 
-    // Actualiza el stock del producto restando la cantidad comprada
-    const nuevoProducto = {
-      id: this.productoId,
-      nombre: this.nombreProducto,
-      picture: '', // Debes proporcionar la URL de la imagen del producto
-      precio: 0, // Debes proporcionar el precio del producto
-      stock: this.stockDisponible - this.cantidad, // Calcula el nuevo stock
-    };
+          const nuevoProducto = {
+            id: this.productoId,
+            nombre: this.nombreProducto,
+            picture: '', // Proporciona la URL de la imagen del producto
+            precio: 0, // Proporciona el precio del producto
+            stock: producto.stock - this.cantidad,
+          };
 
-    this.productoService.actualizarProducto(this.productoId, nuevoProducto).subscribe(
-      () => {
-        console.log('Actualización del stock del producto exitosa');
+          this.productoService.actualizarProducto(this.productoId, nuevoProducto).subscribe(
+            () => {
+              console.log('Actualización del stock del producto exitosa');
+              Swal.fire({
+                icon: 'success',
+                title: 'Compra realizada con éxito',
+                showConfirmButton: false,
+                timer: 3000
+              });
+            },
+            (error) => {
+              console.error('Error al actualizar el stock del producto:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al actualizar el stock del producto. Inténtalo nuevamente.'
+              });
+            }
+          );
+
+        //  this.compraRealizada = true;
+
+          this.cantidad = 0;
+        }
       },
       (error) => {
-        console.error('Error al actualizar el stock del producto:', error);
+        console.error('Error al verificar el stock del producto:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al verificar el stock del producto. Inténtalo nuevamente.'
+        });
       }
     );
-
-    // Marca la compra como realizada y muestra el mensaje
-    this.compraRealizada = true;
-
-    // Limpia los campos después de realizar la compra
-    this.cantidad = 0;
   }
+
 }

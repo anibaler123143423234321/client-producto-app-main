@@ -68,9 +68,11 @@
           class="product-image" />
         <mat-card-actions class="button-container">
           <div class="button-column botonesizquierda">
+
             <button mat-button class="- botonproducto" (click)="showProductDetails(producto)">
               Ver
             </button>
+
             <button mat-button class="my-button botonproducto" (click)="
                 addCarrito(producto.id, producto.precio, producto.nombre)
               ">
@@ -87,7 +89,8 @@
                   userId,
                   nombreUsuario,
                   apellidoUsuario
-                ]" routerLinkActive="active" class="small-button botonproducto">
+                ]" routerLinkActive="active" class="small-button botonproducto"
+                [disabled]="producto.stock <= 0">
                 Comprar
               </button>
             </div>

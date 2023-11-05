@@ -42,7 +42,7 @@
               <td>
                 <ul>
                   <li *ngFor="let compra of compraGroups[fechaCompra]; let last = last">
-                    {{ compra.titulo }} ({{ compra.estadoCompra }}){{ !last ? ', ' : '' }}
+                    {{ compra.estadoCompra }}{{ !last ? ', ' : '' }}
                   </li>
                 </ul>
               </td>

@@ -8,6 +8,7 @@ import { ProductoService } from '@app/services/ProductoService';
 import { CompraCreateRequest } from '../../store/save';
 import { Observable, Subscription } from 'rxjs';
 import * as fromList from '@app/pages/producto/store/save';
+import Swal from 'sweetalert2'; // Asegúrate de importar Swal al principio del archivo
 
 @Component({
   selector: 'app-compra-final',
@@ -76,16 +77,14 @@ tipoDePago: string | undefined;
 
   realizarCompras() {
     if (!this.productosSubscription) {
-      // Suscríbete solo si no estás suscrito aún
       this.productosSubscription = this.productos$.subscribe((productos) => {
         if (productos && productos.length > 0) {
-          const productosActualizados = new Set<number>(); // Usar un conjunto para evitar duplicados
+          const productosActualizados = new Set<number>();
 
           this.arrayCompra.forEach((compra) => {
             const producto = productos.find((p) => p.id === compra.productoId);
 
             if (producto && !productosActualizados.has(producto.id)) {
-              // Solo intenta actualizar productos que existen y no se han actualizado aún
               productosActualizados.add(producto.id);
 
               this.productoService.actualizarProducto(producto.id, producto).subscribe(
@@ -100,32 +99,45 @@ tipoDePago: string | undefined;
           });
         }
       });
-    } else {
-      console.warn('Ya estás suscrito a productos$, evitando suscripción duplicada.');
     }
+
+    const productosSinStock: number[] = [];
 
     this.arrayCompra.forEach((compra) => {
       this.productoService.obtenerProducto(compra.productoId).subscribe((producto) => {
         if (producto.stock > 0) {
-          // Si el stock es mayor que cero, procede con la compra
           compra.tipoEnvio = this.tipoEnvio;
           compra.tipoDePago = this.tipoDePago;
           this.store.dispatch(new fromActions.Create(compra));
         } else {
-          console.error('No hay suficiente stock para el producto con ID: ', compra.productoId);
+          console.error('No hay suficiente stock para el producto con ID:', compra.productoId);
+          productosSinStock.push(compra.productoId);
           // Puedes mostrar un mensaje al usuario o realizar otra acción en este caso.
         }
       });
     });
 
-    // Limpia el carrito después de realizar la compra
-    this.arrayCompra = [];
-    this.CarritoService.clearCart();
+    if (productosSinStock.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Los siguientes productos no tienen suficiente stock: ' + productosSinStock.join(', ')
+      });
+      this.arrayCompra = this.arrayCompra.filter((compra) => !productosSinStock.includes(compra.productoId));
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'Compra realizada con éxito',
+        showConfirmButton: false,
+        timer: 3000
+      });
+      this.arrayCompra = [];
+      this.CarritoService.clearCart();
+      this.compraRealizada = true;
 
-    this.compraRealizada = true;
-
-    setTimeout(() => {
-      this.compraRealizada = false;
-    }, 3000);
+      setTimeout(() => {
+        this.compraRealizada = false;
+      }, 3000);
+    }
   }
 }

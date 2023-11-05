@@ -13,6 +13,19 @@
       fxLayoutGap="10px"
     >
 
+    <div class="personal__photo">
+      <div class="photo">
+        <app-entity-photo
+          class="photo__img"
+          [photoURL]="photoLoaded"
+        ></app-entity-photo>
+        <button mat-button appFilesUpload (changed)="onFilesChanged($event)">
+          <mat-icon>upload</mat-icon>
+          Subir Imagen
+        </button>
+      </div>
+    </div>
+
       <mat-form-field>
         <mat-label>Ingrese Nombre</mat-label>
         <input
@@ -33,7 +46,7 @@
         <input type="hidden" [ngModel]="idNegocioUser" name="negocioId">
       </mat-form-field>
 
-      <button type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Guardar Producto</button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Guardar Categoria</button>
     </form>
   </mat-card>
 </section>

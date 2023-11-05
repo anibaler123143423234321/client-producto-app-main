@@ -15,6 +15,7 @@ import { GeneralService } from '@app/services/general.service';
 })
 export class CategoriaNuevoComponent implements OnInit {
   loading$!: Observable<boolean | null>;
+  photoLoaded!: string;
 
   negocios: { id: number; nombre: string }[] = [];
   selectedNegocioId: number | undefined;
@@ -60,14 +61,22 @@ export class CategoriaNuevoComponent implements OnInit {
   }
 
   registrarCategoria(form: NgForm): void {
-    if (form.valid) {
+    if (form.valid && this.photoLoaded) {
       this.loading$ = this.store.pipe(select(fromList.getLoading));
 
       const categoriaCreateRequest: fromList.CategoriaCreateRequest = {
         nombre: form.value.nombre,
-        negocioId: this.idNegocioUser
+        negocioId: this.idNegocioUser,
+        picture: this.photoLoaded,
       };
       this.store.dispatch(new fromList.Create(categoriaCreateRequest));
     }
   }
+
+  onFilesChanged(url: any): void {
+    if (url) {
+      this.photoLoaded = url;
+    }
+  }
+
 }

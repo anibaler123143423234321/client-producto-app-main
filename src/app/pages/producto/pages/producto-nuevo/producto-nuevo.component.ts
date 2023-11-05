@@ -86,19 +86,7 @@ export class ProductoNuevoComponent implements OnInit {
         stock: stockValue,
       };
       this.store.dispatch(new fromList.Create(productoCreateRequest));
-    // Suscríbete al estado de carga (loading$) para verificar si la creación se realizó con éxito
-    this.loading$.subscribe((loading) => {
-      if (loading === true) {
-        // La creación se realizó con éxito, muestra una alerta
-        Swal.fire({
-          icon: 'success',
-          title: 'Producto Creado',
-          text: 'El producto se ha creado con éxito.',
-        });
 
-      }
-
-    });
   }
 }
 

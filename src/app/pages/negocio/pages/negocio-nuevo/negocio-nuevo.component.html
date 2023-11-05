@@ -41,7 +41,6 @@
         />
         <mat-error>Debe ingresar la dirección del negocio</mat-error>
       </mat-form-field>
-
       <mat-form-field>
         <mat-label>RUC</mat-label>
         <input
@@ -49,13 +48,14 @@
           ngModel
           name="ruc"
           required
-          pattern="[0-12]{11}"
+          pattern="[0-9]{11}"
           maxlength="11"
           placeholder="Ingrese el RUC del Negocio"
           matInput
         />
         <mat-error>Debe ingresar el RUC</mat-error>
       </mat-form-field>
+
 
 
       <mat-form-field>
@@ -78,7 +78,7 @@
           ngModel
           name="telefono"
           required
-          pattern="[0-10]{9}"
+          pattern="[0-9]{9}"
           maxlength="9"
           placeholder="980369856"
           matInput

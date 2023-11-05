@@ -137,8 +137,10 @@
         name="password"
         required
         minlength="7"
+        id="password-input"
       />
       <mat-error>El password debe tener más de 7 caracteres</mat-error>
+      <span class="password-toggle" (click)="togglePasswordVisibility()">👁️</span>
     </mat-form-field>
 
     <mat-form-field hintLabel="El password debe tener 7 caracteres">
@@ -155,6 +157,8 @@
       <mat-error *ngIf="f.value.password !== f.value.passwordConfirme">
         Las contraseñas no coinciden
       </mat-error>
+      <span class="password-toggle" (click)="togglePasswordVisibility()">👁️</span>
+
     </mat-form-field>
 
 

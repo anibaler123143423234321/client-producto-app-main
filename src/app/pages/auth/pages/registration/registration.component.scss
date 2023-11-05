@@ -30,3 +30,9 @@ mat-form-field {
     margin-bottom: 16px;
   }
 }
+.password-toggle {
+  position: absolute;
+  top: 22px; /* Ajusta la posición vertical según tu diseño */
+  right: 12px; /* Ajusta la posición horizontal según tu diseño */
+  cursor: pointer; /* Cambia el cursor a una mano cuando el usuario pasa el ratón sobre el ícono */
+}

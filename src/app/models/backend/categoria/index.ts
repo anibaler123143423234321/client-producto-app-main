@@ -3,4 +3,5 @@ export interface Categoria {
   nombre: string;
   negocioId?: string;
   fechaCreacion?: string;
+  picture: string;
 }
