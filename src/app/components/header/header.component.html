@@ -8,11 +8,19 @@
     <ul fxLayout="row" fxLayoutGap="10px" class="navegacion-menu"  >
 
       <li><a>{{ user ? user.nombre + ' ' + user.apellido : null}}</a></li>
-
+      <li>
+        <img
+          *ngIf="user && user.picture"
+          [src]="user.picture"
+          alt="Foto de perfil"
+          class="profile-picture"
+        >
+      </li>
       <li><a *ngIf="!isAuthorized" routerLink="auth/registration"> Registrar </a></li>
       <li><a *ngIf="!isAuthorized" routerLink="auth/login"> Login </a></li>
       <li><a *ngIf="isAuthorized"  routerLink="/"> Home </a></li>
       <li (click)="onSignOut()"><a *ngIf="isAuthorized" routerLink="/" > Salir </a></li>
+
 
     </ul>
   </div>

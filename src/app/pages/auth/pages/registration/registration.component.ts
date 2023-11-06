@@ -62,7 +62,7 @@ ngOnInit(): void {
 
 
 registrarUsuario(form: NgForm) {
-  if (form.valid) {
+  if (form.valid && this.photoLoaded) {
     if (form.value.password !== form.value.passwordConfirme) {
       // Si las contraseñas no coinciden, establece un error en el campo "passwordConfirme"
       form.controls['passwordConfirme'].setErrors({ 'passwordMismatch': true });
@@ -73,6 +73,7 @@ registrarUsuario(form: NgForm) {
         apellido: this.apellidos, // Usamos la nueva variable apellidos
         telefono: form.value.telefono,
         username: form.value.username,
+        picture: this.photoLoaded,
         email: form.value.email,
         password: form.value.password,
         negocioId: this.selectedNegocioId?.toString(), // Convertir a cadena
@@ -90,11 +91,11 @@ registrarUsuario(form: NgForm) {
 }
 
 
-  onFilesChanged(url: any): void {
-    if (url) {
-      this.photoLoaded = url;
-    }
+onFilesChanged(url: any): void {
+  if (url) {
+    this.photoLoaded = url;
   }
+}
 
 
   dniInputChange(event: Event) {

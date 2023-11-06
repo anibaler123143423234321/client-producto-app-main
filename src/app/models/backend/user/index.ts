@@ -9,7 +9,7 @@ export interface User{
   role?: string;
   negocioId?: string;
   dni?: string; // Agregar el campo dni de tipo number
-  picture?: string;
+  picture: string;
   departamento: string;
   provincia: string;
   distrito: string;

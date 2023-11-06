@@ -14,6 +14,19 @@
      fxLayoutGap="10px"
    >
 
+   <div class="personal__photo">
+    <div class="photo">
+      <app-entity-photo
+        class="photo__img"
+        [photoURL]="photoLoaded"
+      ></app-entity-photo>
+      <button mat-button appFilesUpload (changed)="onFilesChanged($event)">
+        <mat-icon>upload</mat-icon>
+        Subir Foto Perfil
+      </button>
+    </div>
+  </div>
+
    <mat-form-field>
     <mat-label>Ingrese su Numero Documento de Identidad</mat-label>
     <input
@@ -32,7 +45,7 @@
 
 
  <!-- Botón para buscar DNI -->
- <button type="button" mat-raised-button color="primary" (click)="buscarDNI(f)">Buscar DNI</button>
+ <button type="button" mat-raised-button color="primary" (click)="buscarDNI(f)">Completar Datos</button>
 
 
    <mat-form-field>

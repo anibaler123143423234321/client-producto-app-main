@@ -17,6 +17,7 @@ import { SpinnerModule } from '@app/shared/indicators';
 import { MatSelectModule } from '@angular/material/select';
 import { EntityPhotoModule } from '@app/shared/layouts';
 import { HttpClientModule } from '@angular/common/http';
+import { PopupsModule } from '@app/shared/popups';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatCardModule,
     FlexLayoutModule,
     SpinnerModule,
-    EntityPhotoModule
+    EntityPhotoModule,
+    PopupsModule,
 
   ]
 })
