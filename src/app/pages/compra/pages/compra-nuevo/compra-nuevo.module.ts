@@ -8,6 +8,7 @@ import { CompraNuevoComponent } from './compra-nuevo.component';
 
 import { MatFormFieldModule } from '@angular/material/form-field'; // Importa MatFormFieldModule
 import { MatInputModule } from '@angular/material/input'; // Importa MatInputModule u otros módulos que puedas necesitar
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -19,6 +20,8 @@ import { MatInputModule } from '@angular/material/input'; // Importa MatInputMod
     CompraNuevoRoutingModule,
     MatFormFieldModule, // Asegúrate de que esté aquí
     MatInputModule,
+    MatExpansionModule,
+
     FormsModule // Agrega FormsModule aquí
   ]
 })

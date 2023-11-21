@@ -84,6 +84,9 @@ export class SignInEmailError implements Action{
 //SignUP o Registro de Usuarios
 
 export class SignUpEmail implements Action{
+  pipe() {
+    throw new Error('Method not implemented.');
+  }
   readonly type = Types.SIGN_UP_EMAIL;
   constructor(public user: UserCreateRequest){}
 }

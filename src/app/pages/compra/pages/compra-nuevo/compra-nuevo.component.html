@@ -4,10 +4,14 @@
 
 <form (ngSubmit)="realizarCompra()">
 
-  <mat-form-field>
+  <mat-form-field style="width: 100%">
     <mat-label>Nombre del Producto</mat-label>
-    <input matInput [value]="nombreProducto" name="nombreProducto" readonly>
+    <div style="width: 100%">
+      <input matInput [value]="nombreProducto" name="nombreProducto" readonly style="width: 100%">
+    </div>
   </mat-form-field>
+
+
 
   <mat-form-field>
     <mat-label>Tipo de Envío</mat-label>

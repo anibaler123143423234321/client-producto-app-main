@@ -18,8 +18,8 @@ form {
   border-radius: 5px;
 }
 
-/* Estilos para el nombre del producto */
-.nombre-producto {
-  font-weight: bold; /* Texto en negrita */
-  margin-top: 10px; /* Margen superior para separar del formulario */
+/* Agrega una clase específica para el campo del nombre del producto */
+.expanding-input {
+  min-width: 0;
+  width: auto;
 }

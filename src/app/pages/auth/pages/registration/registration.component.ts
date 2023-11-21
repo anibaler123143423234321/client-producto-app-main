@@ -6,7 +6,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { NegocioService } from '@app/services/NegocioService';
 import { NgZone } from '@angular/core'; // Importa NgZone
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { DniResponse } from './dniResponse';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
@@ -43,51 +43,69 @@ export class RegistrationComponent implements OnInit {
 
   ) { }
 
-ngOnInit(): void {
-  this.negocioService.cargarDatosDeNegocios().subscribe((negocios) => {
-    this.negocios = negocios.map((negocio) => ({
-      id: negocio.id,
-      nombre: negocio.nombre
-    }));
-    console.log('Negocios cargados:', this.negocios);
+  ngOnInit(): void {
+    this.negocioService.cargarDatosDeNegocios().subscribe((negocios) => {
+      // Filtra los negocios y excluye aquellos con id igual a 1
+      this.negocios = negocios.filter(negocio => negocio.id !== 1)
+                              .map((negocio) => ({
+                                id: negocio.id,
+                                nombre: negocio.nombre
+                              }));
+      console.log('Negocios cargados:', this.negocios);
 
-    // Inicializar selectedNegocioId con el primer negocio de la lista
-    if (this.negocios.length > 0) {
-      this.selectedNegocioId = this.negocios[0].id;
-    }
-  });
+      // Inicializar selectedNegocioId con el primer negocio de la lista
+      if (this.negocios.length > 0) {
+        this.selectedNegocioId = this.negocios[0].id;
+      }
+    });
 
-  this.loading$ = this.store.pipe(select(fromUser.getLoading));
-}
+    this.loading$ = this.store.pipe(select(fromUser.getLoading));
+  }
 
 
+// registration.component.ts
 registrarUsuario(form: NgForm) {
   if (form.valid && this.photoLoaded) {
     if (form.value.password !== form.value.passwordConfirme) {
-      // Si las contraseñas no coinciden, establece un error en el campo "passwordConfirme"
       form.controls['passwordConfirme'].setErrors({ 'passwordMismatch': true });
     } else {
-      // Si las contraseñas coinciden, procede con el registro
       const userCreateRequest: fromUser.UserCreateRequest = {
-        nombre: this.nombreCompleto, // Usamos la nueva variable nombreCompleto
-        apellido: this.apellidos, // Usamos la nueva variable apellidos
+        nombre: this.nombreCompleto,
+        apellido: this.apellidos,
         telefono: form.value.telefono,
         username: form.value.username,
         picture: this.photoLoaded,
         email: form.value.email,
         password: form.value.password,
-        negocioId: this.selectedNegocioId?.toString(), // Convertir a cadena
+        negocioId: this.selectedNegocioId?.toString(),
         dni: form.value.dni,
         tipoDoc: form.value.tipoDoc,
         departamento: form.value.departamento,
         provincia: form.value.provincia,
         distrito: form.value.distrito,
       };
-      console.log('Enviando datos de registro:', userCreateRequest);
 
+      // Dispatch de la acción SignUpEmail
       this.store.dispatch(new fromUser.SignUpEmail(userCreateRequest));
     }
   }
+}
+
+
+private mostrarAlertaExitosa(title: string, htmlMessage: string): void {
+  Swal.fire({
+    title: title,
+    html: htmlMessage,
+    icon: 'success',
+  });
+}
+
+private mostrarAlertaError(title: string, textMessage: string): void {
+  Swal.fire({
+    title: title,
+    text: textMessage,
+    icon: 'error',
+  });
 }
 
 

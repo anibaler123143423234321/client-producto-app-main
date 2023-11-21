@@ -9,6 +9,7 @@ import { catchError, switchMap, tap, map } from 'rxjs/operators';
 import * as fromActions from './user.actions';
 import { UserResponse } from './user.models';
 import { GeneralService } from '@app/services/general.service';
+import Swal from 'sweetalert2';
 
 type Action = fromActions.All;
 
@@ -51,7 +52,12 @@ export class UserEffects {
             //catchError(err => of(new fromActions.SignUpEmailError(err.message)))
 
             catchError((err) => {
-              this.notification.error('Errores al registrar nuevo usuario');
+              // Use SweetAlerts for displaying error messages
+              Swal.fire({
+                icon: 'error',
+                title: 'Error al registrar nuevo usuario',
+                text: 'Ocurrió un error al intentar registrar el usuario. Por favor, inténtelo registrando un nuevo usuario o email.',
+              });
               return of(new fromActions.SignUpEmailError(err.message));
             })
           )
